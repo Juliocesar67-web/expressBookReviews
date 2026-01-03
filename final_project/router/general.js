@@ -24,16 +24,32 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  res.send(JSON.stringify(books))
+  const getBooks = new Promise((resolve,reject)=>{
+    if (books){
+      resolve(books)
+    }else{
+      reject("No books available")
+    }
+  })
+
+  return res.json(books)
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
-  const isbn = req.params.isbn
-  if (books[isbn]){
-    return res.send(JSON.stringify(books[isbn]))
-  }
+   const isbn = req.params.isbn
+  // if (books[isbn]){
+  //   return res.send(JSON.stringify(books[isbn]))
+  // }
+  const getBooksByISBN = new Promise ((resolve,reject)=>{
+    if(books[isbn]){
+      resolve(books[isbn]);
+    }else{
+      reject("Book not found")
+    }
+  })
+  return getBooksByISBN.then(book=> res.json(book)).catch(err=> res.status(404).json({message:err}))
  });
   
 // Get book details based on author
@@ -70,10 +86,4 @@ public_users.get('/review/:isbn',function (req, res) {
   }
 });
 
-const  asyncAwaitRequests = async ()=>{
-  await axios.get("http://localhost:5000/").then((result)=>{console.log(result.data)}).catch((err)=>{console.log(err)})
- await axios.get("http://localhost:5000/isbn/1").then((result)=>{console.log(result.data)}).catch((err)=>{console.log(err)})
-}
- 
-asyncAwaitRequests()
 module.exports.general = public_users;
