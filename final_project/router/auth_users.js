@@ -52,7 +52,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const review = req.body.review;
   const token = req.session.authorization["token"];
-  console.log(req.headers);
+
 
   const decoded = jwt.verify(token, "secret");
   const username = decoded.username
@@ -60,7 +60,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 
   reviewedBook.reviews[username] = review;
-  console.log("added new review");
   return res.status(200).json({ message: "Review addded successfully", book:reviewedBook });
 });
 

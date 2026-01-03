@@ -9,7 +9,6 @@ const public_users = express.Router();
 public_users.post("/register", (req,res) => {
   const username = req.body.username
   const password = req.body.password
-  console.log(req)
   if(!username || !password){
         return res.status(404).json({message:"Missing fields."})
   }
@@ -33,9 +32,8 @@ public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   const isbn = req.params.isbn
   if (books[isbn]){
-    res.send(JSON.stringify(books[isbn]))
+    return res.send(JSON.stringify(books[isbn]))
   }
-  return res.status(300).json({message: "Yet to be implemented"});
  });
   
 // Get book details based on author
@@ -72,6 +70,10 @@ public_users.get('/review/:isbn',function (req, res) {
   }
 });
 
-axios.get("http://localhost:5000/").then((result)=>{console.log(result)}).catch((err)=>{console.log(err)})
-
+const  asyncAwaitRequests = async ()=>{
+  await axios.get("http://localhost:5000/").then((result)=>{console.log(result.data)}).catch((err)=>{console.log(err)})
+ await axios.get("http://localhost:5000/isbn/1").then((result)=>{console.log(result.data)}).catch((err)=>{console.log(err)})
+}
+ 
+asyncAwaitRequests()
 module.exports.general = public_users;
